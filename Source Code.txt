@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Name Code</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons for Utility Elements -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter for clean, legible sans-serif typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    colors: {
+                        obsidianBg: '#0B0D11',
+                        cardBg: '#12161F',
+                        goldBase: '#D4AF37',
+                        goldLight: '#F3E5AB',
+                        goldDark: '#996515',
+                        goldBorder: 'rgba(212, 175, 55, 0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Dark & Gold Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0D11;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #231C10;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+        }
+
+        /* Animated Metallic Gold Text Fill (EXCLUSIVELY FOR MAIN CODE BANNER) */
+        .gold-animated-text {
+            background: linear-gradient(110deg, #996515 0%, #D4AF37 25%, #FFF8DC 50%, #D4AF37 75%, #996515 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: goldShimmer 3.5s linear infinite;
+        }
+
+        @keyframes goldShimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Gold Card Surface */
+        .gold-card {
+            background: rgba(18, 22, 31, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.05);
+        }
+
+        .gold-input-focus:focus {
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+            border-color: #D4AF37;
+        }
+
+        .gold-button {
+            background: linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #AA771C 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gold-button:hover {
+            background: linear-gradient(135deg, #C59315 0%, #E6C251 50%, #B88320 100%);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .gold-button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+
+<body class="bg-obsidianBg text-slate-200 font-sans min-h-screen flex items-center justify-center p-4 sm:p-6 selection:bg-goldBase selection:text-black">
+
+    <main class="max-w-2xl w-full mx-auto space-y-6">
+        
+        <!-- Luxury Gold Input Card -->
+        <div class="gold-card rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-goldBase/5 rounded-full blur-2xl pointer-events-none"></div>
+
+            <form id="nameForm" onsubmit="event.preventDefault(); runCppLogic();" class="space-y-5 relative z-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- First Name Input -->
+                    <div>
+                        <label for="firstName" class="block text-xs font-semibold uppercase tracking-wider text-amber-200/80 mb-1.5">First Name</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/70">
+                                <i class="fa-solid fa-user text-sm"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                placeholder="e.g. Srijon" 
+                                class="w-full pl-10 pr-4 py-3 bg-black/60 border border-amber-900/40 rounded-xl text-amber-100 placeholder-slate-600 focus:outline-none gold-input-focus transition-all duration-200 text-sm font-normal"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Last Name Input -->
+                    <div>
+                        <label for="lastName" class="block text-xs font-semibold uppercase tracking-wider text-amber-200/80 mb-1.5">Last Name</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/70">
+                                <i class="fa-solid fa-user-tag text-sm"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                placeholder="e.g. Rahman" 
+                                class="w-full pl-10 pr-4 py-3 bg-black/60 border border-amber-900/40 rounded-xl text-amber-100 placeholder-slate-600 focus:outline-none gold-input-focus transition-all duration-200 text-sm font-normal"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gold Action Buttons -->
+                <div class="pt-2 flex items-center gap-3">
+                    <button 
+                        type="submit" 
+                        class="gold-button flex-1 text-black font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
+                    >
+                        <i class="fa-solid fa-gem text-xs"></i> Find Your Name Code
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="resetForm()" 
+                        class="px-4 py-3.5 bg-black/60 hover:bg-amber-950/40 text-amber-300 rounded-xl border border-amber-900/40 transition-all duration-200 text-sm flex items-center justify-center"
+                        title="Reset"
+                    >
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Luxury Output Card -->
+        <div class="gold-card rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute -bottom-10 -left-10 w-36 h-36 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="py-7 px-4 rounded-xl bg-black/80 border border-amber-900/30 min-h-[160px] flex flex-col justify-center items-center">
+                
+                <!-- Empty Initial State -->
+                <div id="emptyFillState" class="text-amber-200/60 text-base font-normal text-center">
+                    Enter your name to see result
+                </div>
+                
+                <!-- Calculated Result Container -->
+                <div id="fillContainer" class="hidden space-y-6 w-full text-center">
+                    
+                    <!-- Main Code Banner (Animated Gold Text Fill retained exclusively here) -->
+                    <div class="relative inline-block mx-auto px-8 py-3 rounded-2xl bg-gradient-to-b from-amber-950/40 to-black border border-amber-500/40 shadow-2xl overflow-hidden">
+                        <div class="absolute inset-0 bg-amber-500/5 animate-pulse"></div>
+                        <div id="gradientCodeBox" class="relative text-3xl sm:text-4xl font-bold font-mono tracking-widest gold-animated-text">
+                            <!-- Code Output Numbers -->
+                        </div>
+                    </div>
+
+                    <!-- Non-bold Solid Color Explanation Lines -->
+                    <div id="detailsOutput" class="text-sm sm:text-base text-slate-300 font-normal leading-relaxed space-y-1">
+                        <!-- Standard Solid Text Details -->
+                    </div>
+
+                    <!-- Brand SVG Use Cases Section -->
+                    <div class="pt-6 border-t border-amber-900/40 text-left space-y-4">
+                        <div class="text-xs uppercase tracking-widest font-semibold text-amber-300/90 text-center mb-4">
+                            Use cases of your Name Code
+                        </div>
+
+                        <!-- Clean 2-Column Grid for Brand & Platform Examples -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            
+                            <!-- 1. Password -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+                                    <i class="fa-solid fa-key text-xs"></i>
+                                </div>
+                                <div id="useCasePassword" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 2. Gmail -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseEmail" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 3. Instagram -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                        <radialGradient id="rg" r="150%" cx="30%" cy="107%">
+                                            <stop stop-color="#fdf497" offset="0%" />
+                                            <stop stop-color="#fdf497" offset="5%" />
+                                            <stop stop-color="#fd5949" offset="45%" />
+                                            <stop stop-color="#d6249f" offset="60%" />
+                                            <stop stop-color="#285AEB" offset="90%" />
+                                        </radialGradient>
+                                        <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#rg)" />
+                                        <path fill="#ffffff" d="M12 7a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 110-6 3 3 0 010 6zm5.25-9.25a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseInsta" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 4. X (Twitter) -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-black border border-slate-800 flex items-center justify-center shrink-0">
+                                    <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseX" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 5. YouTube -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#FF0000]" viewBox="0 0 24 24">
+                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseYT" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 6. GitHub -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseGithub" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 7. Reddit (Uses First Character Initials + Code) -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#FF4500]/10 border border-[#FF4500]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#FF4500]" viewBox="0 0 24 24">
+                                        <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.562-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.688-.562-1.249-1.25-1.249zm-4.566 3.875a.387.387 0 0 0-.271.663c.833.834 2.188.834 3.02 0a.387.387 0 0 0-.547-.547c-.532.532-1.394.532-1.926 0a.383.383 0 0 0-.276-.116z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseReddit" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 8. Telegram -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#24A1DE]/10 border border-[#24A1DE]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#24A1DE]" viewBox="0 0 24 24">
+                                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm5.262 7.156c.106.012.336.036.336.192 0 .096-.036.216-.084.288-.432 2.052-1.788 8.412-2.484 11.664-.096.444-.264.588-.42.6-.348.024-.612-.228-.948-.444-1.524-1.008-2.388-1.632-3.864-2.604-.42-.276-.744-.576-.096-1.116.144-.12 2.688-2.46 2.736-2.676.012-.024.012-.12-.048-.168-.06-.048-.156-.024-.228-.012-.096.024-1.62 1.032-4.572 3.024-.432.3-.828.444-1.188.432-.396-.012-1.164-.228-1.728-.408-.708-.228-1.272-.348-1.224-.744.024-.204.3-.42.828-.648 3.24-1.416 5.4-2.352 6.48-2.808 3.084-1.284 3.72-1.512 4.14-1.512z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseTelegram" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 9. Discord -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#5865F2]/10 border border-[#5865F2]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#5865F2]" viewBox="0 0 24 24">
+                                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseDiscord" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 10. LinkedIn -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#0A66C2]/10 border border-[#0A66C2]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#0A66C2]" viewBox="0 0 24 24">
+                                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.72a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseLinkedIn" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 11. Snapchat -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#FFFC00]/10 border border-[#FFFC00]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#FFFC00]" viewBox="0 0 24 24">
+                                        <path d="M12.001 1.5c-3.957 0-6.071 2.839-6.071 5.485 0 .973.238 2.012.782 2.884.148.236.103.548-.112.723-.559.458-1.503.958-2.203.958-.337 0-.616.273-.616.609 0 .809.845 1.332 1.531 1.543.197.061.32.259.288.462-.128.81-.303 2.107-.303 2.158 0 .265.176.495.433.56 2.302.585 3.393 1.94 4.095 2.816.14.175.352.277.577.277.348 0 1.258-.292 1.602-.292s1.254.292 1.602.292c.225 0 .437-.102.577-.277.702-.876 1.793-2.231 4.095-2.816.257-.065.433-.295.433-.56 0-.051-.175-1.348-.303-2.158-.032-.203.091-.401.288-.462.686-.211 1.531-.734 1.531-1.543 0-.336-.279-.609-.616-.609-.7 0-1.644-.5-2.203-.958-.215-.175-.26-.487-.112-.723.544-.872.782-1.911.782-2.884 0-2.646-2.114-5.485-6.071-5.485z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseSnapchat" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 12. Threads -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-black border border-slate-800 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                                        <path d="M12.186 24c-3.15 0-5.698-1.041-7.258-2.955C3.39 19.123 2.8 16.273 2.8 12.651 2.8 8.847 3.473 5.8 4.887 3.52 6.425 1.042 8.846 0 12.228 0c3.314 0 5.794 1.054 7.37 3.134 1.298 1.713 1.93 4.137 1.93 7.205 0 .285-.01.58-.027.886h-2.112a14.73 14.73 0 0 0 .022-.68c0-2.502-.497-4.437-1.478-5.753-1.129-1.512-2.92-2.278-5.328-2.278-2.585 0-4.417.848-5.446 2.52-1.134 1.844-1.677 4.394-1.677 7.579 0 3.036.452 5.438 1.385 7.14 1.034 1.887 2.766 2.844 5.148 2.844 2.115 0 3.615-.658 4.458-1.956.634-.977.94-2.296.94-3.921v-.383c0-1.898-.567-3.327-1.685-4.249-1.002-.826-2.42-1.245-4.214-1.245-1.11 0-2.062.152-2.83.453-.284.111-.383.418-.24.698.117.228.384.32.646.223.636-.236 1.442-.354 2.395-.354 1.445 0 2.535.326 3.24.968.743.676 1.12 1.733 1.12 3.14 0 1.25-.213 2.22-.633 2.883-.58.916-1.603 1.38-3.042 1.38-1.67 0-2.837-.625-3.47-1.858-.582-1.133-.86-2.735-.86-4.761 0-1.92.297-3.42.882-4.457.653-1.159 1.77-1.747 3.322-1.747 1.583 0 2.72.545 3.38 1.62.338.552.54 1.243.601 2.055h2.106c-.073-1.19-.42-2.257-1.033-3.17C17.067 4.382 15.11 3.5 12.258 3.5c-2.41 0-4.205.813-5.336 2.416-1.002 1.421-1.488 3.493-1.488 6.16 0 2.863.488 5.097 1.45 6.64 1.096 1.758 2.895 2.65 5.344 2.65 1.796 0 3.25-.492 4.322-1.462 1.154-1.045 1.731-2.527 1.731-4.405v-.321c0-2.311-.8-4.103-2.378-5.327C14.34 8.634 12.188 8 9.53 8c-1.383 0-2.61.21-3.646.625a2.006 2.006 0 0 0-1.22 2.502c.28.847 1.18 1.332 2.023 1.052.793-.264 1.738-.397 2.81-.397 2.026 0 3.57.447 4.588 1.33 1.036.898 1.56 2.19 1.56 3.84v.265c0 1.237-.23 2.191-.684 2.835-.58.824-1.577 1.242-2.964 1.242-1.613 0-2.735-.586-3.336-1.741-.537-1.033-.8-2.485-.8-4.316 0-1.724.27-3.037.802-3.902.584-.948 1.568-1.428 2.925-1.428 1.127 0 1.954.348 2.458 1.034.344.47.533 1.107.562 1.892h2.09c-.043-1.12-.354-2.08-.934-2.855C14.444 9.172 13.064 8.5 11.36 8.5c-2.127 0-3.722.757-4.74 2.25C5.666 12.184 5.18 14.168 5.18 16.65c0 2.628.513 4.673 1.526 6.078C7.886 24.333 9.73 25 12.186 25c3.21 0 5.798-1.026 7.693-3.05C21.734 19.98 22.7 17.11 22.7 13.407c0-.285-.008-.57-.024-.856h-2.112c.018.27.027.537.027.8 0 3.23-.807 5.67-2.399 7.25C16.617 22.18 14.28 23 11.23 23c-2.022 0-3.52-.61-4.453-1.815-.812-1.05-1.224-2.588-1.224-4.573 0-2.073.414-3.665 1.231-4.73.818-1.066 2.08-1.607 3.753-1.607.82 0 1.488.163 1.986.486.544.353.816.896.816 1.614 0 .807-.312 1.417-.928 1.812-.582.373-1.397.56-2.423.56-.252 0-.496-.012-.733-.036a.65.65 0 0 0-.71.58.647.647 0 0 0 .58.71c.28.028.572.042.863.042 1.393 0 2.528-.27 3.373-.803 1.013-.639 1.527-1.587 1.527-2.818 0-1.127-.42-2.002-1.25-2.6-.826-.595-1.954-.897-3.353-.897-2.102 0-3.712.695-4.787 2.067-1.084 1.385-1.633 3.333-1.633 5.79 0 2.404.475 4.258 1.413 5.512.924 1.233 2.35 1.858 4.238 1.858 2.628 0 4.593-.687 5.84-2.043 1.254-1.363 1.888-3.393 1.888-6.037 0-.256-.007-.508-.021-.756h2.112c.015.25.023.504.023.76 0 3.092-.767 5.485-2.28 7.114C18.666 22.95 16.035 24 12.186 24z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseThreads" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 13. Twitch -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#9146FF]/10 border border-[#9146FF]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#9146FF]" viewBox="0 0 24 24">
+                                        <path d="M11.571 1.429L1.429 4.001v14.571h4.857v4.001l4.001-4.001h3.429l6.857-6.857V1.429H11.571zm9.143 10.286l-3.429 3.429h-3.429l-2.857 2.857v-2.857H6.857V3.143h13.857v8.572zM16.571 6.572h-1.714v5.143h1.714V6.572zm-4.571 0h-1.714v5.143h1.714V6.572z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCaseTwitch" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                            <!-- 14. Pinterest -->
+                            <div class="p-3 bg-black/70 border border-amber-900/30 rounded-xl flex items-center gap-3.5 hover:border-amber-700/50 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-[#BD081C]/10 border border-[#BD081C]/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 fill-[#BD081C]" viewBox="0 0 24 24">
+                                        <path d="M12 0a12 12 0 0 0-4.37 23.17c-.08-.94-.15-2.4.03-3.44.17-.93 1.1-4.7 1.1-4.7s-.28-.56-.28-1.39c0-1.3.75-2.27 1.7-2.27.8 0 1.19.6 1.19 1.32 0 .8-.51 2.02-.78 3.14-.22.94.47 1.7 1.4 1.7 1.68 0 2.97-1.77 2.97-4.33 0-2.26-1.63-3.84-3.95-3.84-2.69 0-4.27 2.02-4.27 4.1 0 .81.31 1.68.7 2.15.08.1.09.18.06.32l-.26 1.08c-.04.18-.15.22-.35.13-1.32-.61-2.14-2.54-2.14-4.08 0-3.33 2.42-6.39 6.98-6.39 3.66 0 6.51 2.61 6.51 6.1 0 3.64-2.29 6.57-5.48 6.57-1.07 0-2.08-.56-2.42-1.21l-.66 2.52c-.24.92-.88 2.08-1.31 2.78A12 12 0 1 0 12 0z"/>
+                                    </svg>
+                                </div>
+                                <div id="useCasePinterest" class="text-sm font-mono font-normal text-slate-200 truncate"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /**
+         * C++ is_alphabet logic: Checks if both characters are alphabetic
+         */
+        function is_alphabet(a, b) {
+            if (!a || !b) return false;
+            
+            const isLower = c => c >= 'a' && c <= 'z';
+            const isUpper = c => c >= 'A' && c <= 'Z';
+
+            return (
+                (isLower(a) && isLower(b)) ||
+                (isUpper(a) && isUpper(b)) ||
+                (isLower(a) && isUpper(b)) ||
+                (isUpper(a) && isLower(b))
+            );
+        }
+
+        /**
+         * C++ logic: tolower(char) - 96
+         */
+        function getAlphabetPosition(char) {
+            if (!char) return 0;
+            return char.toLowerCase().charCodeAt(0) - 96;
+        }
+
+        /**
+         * Main C++ Execution Processor
+         */
+        function runCppLogic() {
+            const nm1 = document.getElementById('firstName').value.trim();
+            const nm2 = document.getElementById('lastName').value.trim();
+
+            const emptyFillState = document.getElementById('emptyFillState');
+            const fillContainer = document.getElementById('fillContainer');
+            const gradientCodeBox = document.getElementById('gradientCodeBox');
+            const detailsOutput = document.getElementById('detailsOutput');
+
+            if (!nm1 || nm1.length === 0) {
+                emptyFillState.classList.remove('hidden');
+                emptyFillState.innerHTML = `<span class="text-rose-400 font-normal">Enter First name first -_-</span>`;
+                fillContainer.classList.add('hidden');
+                return;
+            }
+
+            const char1 = nm1[0];
+            const char2 = nm2 && nm2.length > 0 ? nm2[0] : '';
+
+            // C++ is_alphabet validation
+            if (char1 && char2 && is_alphabet(char1, char2)) {
+                const pos1 = getAlphabetPosition(char1);
+                const pos2 = getAlphabetPosition(char2);
+
+                let detailsLines = [];
+
+                if (nm1.length === 1 && nm2.length === 1) {
+                    detailsLines.push(`<div>It's not your full name! Anyway,</div>`);
+                }
+
+                // Preserved C++ Output Strings (Solid non-bold light text)
+                detailsLines.push(`<div>In Alphabetical order(A to Z) - </div>`);
+                detailsLines.push(`<div>Position of '${escapeHtml(char1)}' is : ${pos1}</div>`);
+                detailsLines.push(`<div>and Position of '${escapeHtml(char2)}' is : ${pos2}</div>`);
+
+                // 1. Primary Name Code with Metallic Gold Gradient Text Fill inside box
+                gradientCodeBox.textContent = `${pos1} ${pos2}`;
+
+                // 2. Solid Color Explanation Details
+                detailsOutput.innerHTML = detailsLines.join('');
+
+                // 3. Dynamic Platform Use Cases using User Names & Name Code
+                const fnLower = nm1.toLowerCase();
+                const lnLower = nm2 ? nm2.toLowerCase() : '';
+                const codeStr = `${pos1}${pos2}`;
+                
+                // Reddit Initials + Code (e.g., Srijon Rahman -> sr1918)
+                const redditInitials = (fnLower[0] || '') + (lnLower[0] || '');
+
+                document.getElementById('useCasePassword').textContent = `password_${fnLower}${codeStr}xyz`;
+                document.getElementById('useCaseEmail').textContent = `${fnLower}${codeStr}@gmail.com`;
+                document.getElementById('useCaseInsta').textContent = `${fnLower}_${codeStr}`;
+                document.getElementById('useCaseX').textContent = `${fnLower}${codeStr}`;
+                document.getElementById('useCaseYT').textContent = `@${fnLower}${codeStr}`;
+                document.getElementById('useCaseGithub').textContent = `${fnLower}${codeStr}`;
+                document.getElementById('useCaseReddit').textContent = `${redditInitials}${codeStr}`;
+                document.getElementById('useCaseTelegram').textContent = `${fnLower}${codeStr}`;
+                document.getElementById('useCaseDiscord').textContent = `${fnLower}_${codeStr}`;
+                document.getElementById('useCaseLinkedIn').textContent = `${fnLower}-${lnLower || 'user'}-${codeStr}`;
+                document.getElementById('useCaseSnapchat').textContent = `${fnLower}_${codeStr}`;
+                document.getElementById('useCaseThreads').textContent = `${fnLower}_${codeStr}`;
+                document.getElementById('useCaseTwitch').textContent = `${fnLower}${codeStr}`;
+                document.getElementById('useCasePinterest').textContent = `${fnLower}${codeStr}`;
+
+                emptyFillState.classList.add('hidden');
+                fillContainer.classList.remove('hidden');
+
+            } else {
+                const errorMsg = `Lol, '${escapeHtml(nm1)} ${escapeHtml(nm2)}' can't be a name! -_- `;
+                
+                emptyFillState.classList.remove('hidden');
+                emptyFillState.innerHTML = `<span class="text-rose-400 font-normal">${errorMsg}</span>`;
+                fillContainer.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Reset Form and Output State
+         */
+        function resetForm() {
+            document.getElementById('nameForm').reset();
+            const emptyFillState = document.getElementById('emptyFillState');
+            const fillContainer = document.getElementById('fillContainer');
+
+            emptyFillState.classList.remove('hidden');
+            emptyFillState.textContent = 'See your result here';
+            fillContainer.classList.add('hidden');
+        }
+
+        /**
+         * Sanitize user input text
+         */
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
